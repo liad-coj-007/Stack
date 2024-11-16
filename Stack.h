@@ -1,4 +1,4 @@
-#include <new> 
+#include "Exception/EmptyStack.h"
 template<class T>
 class Stack{
 public:
@@ -35,6 +35,17 @@ public:
      */
     ~Stack(){
         DeleteNode(lastptr);
+    }
+
+    /**
+     * @brief return the last val we push
+     * @return const T&
+     */
+    const T& top()const {
+        if(is_empty()){
+            throw EmptyStack();
+        }
+        return lastptr->arr[idx];
     }
 
 private:
