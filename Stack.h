@@ -5,7 +5,7 @@ private:
  struct Node{
         Node* next;
         // for check
-        static const int MAXLENGTH  = 2;
+        static const int MAXLENGTH  = 1000;
         T arr[MAXLENGTH];
       
         /**
