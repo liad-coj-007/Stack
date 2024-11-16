@@ -40,23 +40,23 @@ public:
 private:
     struct Node{
         Node* next;
-        T* arr;
         // for check
-        static const int MAXLENGTH  = 3;
+        static const int MAXLENGTH  = 2;
+        T arr[MAXLENGTH];
+      
         /**
          * @brief node constractor
          */
         Node(){
-            arr = new T[MAXLENGTH];
             next = nullptr;
         }
 
         /**
          * @brief free allocate memory
          */
-        ~Node(){
-            delete [] arr;
-        }
+        // ~Node(){
+        //     delete [] arr;
+        // }
     };
 
     Node* lastptr;
