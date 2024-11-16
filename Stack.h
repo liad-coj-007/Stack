@@ -1,6 +1,21 @@
 #include "Exception/EmptyStack.h"
 template<class T>
 class Stack{
+private:
+ struct Node{
+        Node* next;
+        // for check
+        static const int MAXLENGTH  = 2;
+        T arr[MAXLENGTH];
+      
+        /**
+         * @brief node constractor
+         */
+        Node(){
+            next = nullptr;
+        }
+
+    };
 public:
     /**
      * @brief defualt constractor
@@ -9,6 +24,99 @@ public:
         idx = -1;
         lastptr = nullptr;
     }
+
+
+    Stack(const Stack &other){
+        idx = -1;
+        lastptr = nullptr;
+        CopyData(other);
+    }
+
+    Stack& operator=(const Stack &other){
+        if(this == &other){
+            return *this;
+        }
+        
+        idx = -1;
+        DeleteNode(lastptr);
+        lastptr = nullptr;
+        CopyData(other);
+        return *this;
+    }
+
+
+    class Iterator {
+    private:
+        const Stack* stack;
+        int idx;
+        Node* ptr;
+
+        Iterator(const Stack* stack,Node *ptr,
+        const int idx){
+            this->stack = stack;
+            this->ptr = ptr;
+            this->idx = idx;
+        }
+    public:
+        /**
+         * @brief return the last value on node
+         * @return T&
+         */
+        const T& operator*()const {
+            return ptr->arr[idx];
+        }
+
+        /**
+         * @brief get the next it
+         * 
+         */
+        Iterator operator++(){
+            if(idx == -1){
+                return *this;
+            }
+
+            idx--;
+            if(idx != -1){
+                return *this;
+            }
+
+            ptr = ptr->next;
+        
+            if(ptr != nullptr){
+                idx = Node::MAXLENGTH - 1;
+            }
+
+            return *this;
+
+        }
+
+        /**
+         * do operator!= 
+         * @param other - other iterator we equal
+         */
+        bool operator!=(const Iterator &other)const{
+            return stack != other.stack || 
+            idx != other.idx || ptr != other.ptr;
+        }
+
+        friend class Stack;
+    };
+
+
+    /**
+     * @brief return the begin it
+     */
+    Iterator begin()const{
+        return Iterator(this,lastptr,idx);
+    }
+
+    /**
+     * @brief return end it
+     */
+    Iterator end()const {
+        return Iterator(this,nullptr,-1);
+    }
+
 
     /**
      * @brief add a value to the stack
@@ -73,21 +181,34 @@ public:
         }
     }
 
+
+   
+
 private:
-    struct Node{
-        Node* next;
-        // for check
-        static const int MAXLENGTH  = 1000;
-        T arr[MAXLENGTH];
-      
-        /**
-         * @brief node constractor
-         */
-        Node(){
-            next = nullptr;
+
+    /**
+     * @brief copy data from stack
+     * @param stack - the stack we copy
+     */
+    void CopyData(const Stack &stack){
+        try{
+            CopyData(stack.begin(),stack.end());
+        }catch(const bad_alloc &e){
+            DeleteNode(lastptr);
+            throw;
+        }
+    }
+
+    void CopyData(const Iterator &begin ,const Iterator &end){
+        if(!(begin != end)){
+            return;
         }
 
-    };
+        auto it = begin;
+        ++it;
+        CopyData(it,end);
+        push(*begin);
+    }
 
     Node* lastptr;
     int idx;
