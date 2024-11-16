@@ -51,12 +51,6 @@ private:
             next = nullptr;
         }
 
-        /**
-         * @brief free allocate memory
-         */
-        // ~Node(){
-        //     delete [] arr;
-        // }
     };
 
     Node* lastptr;
