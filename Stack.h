@@ -45,6 +45,21 @@ public:
     }
 
 
+    Stack(Stack &&other){
+        idx = other.idx;
+        lastptr = other.lastptr;
+        other.lastptr = nullptr;
+    }
+
+    Stack operator=(Stack &&other){
+        DeleteNode(lastptr);
+        idx = other.idx;
+        lastptr = other.lastptr;
+        other.lastptr = nullptr;
+        return *this;
+    }
+
+
     class Iterator {
     private:
         const Stack* stack;
