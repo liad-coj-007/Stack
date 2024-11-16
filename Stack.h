@@ -48,11 +48,36 @@ public:
         return lastptr->arr[idx];
     }
 
+    /**
+     * @brief pop the lastelement
+     */
+    void pop(){
+        if(is_empty()){
+            return;
+        }
+
+        idx--;
+        if(idx != -1){
+            return;
+        }
+
+        //delete node
+        Node* temp = lastptr;
+        lastptr = lastptr->next;
+        temp->next = nullptr;
+        DeleteNode(temp);
+
+
+        if(lastptr != nullptr){
+            idx = Node::MAXLENGTH - 1;
+        }
+    }
+
 private:
     struct Node{
         Node* next;
         // for check
-        static const int MAXLENGTH  = 2;
+        static const int MAXLENGTH  = 1000;
         T arr[MAXLENGTH];
       
         /**
